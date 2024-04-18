@@ -4,6 +4,7 @@ import { apiBase } from "../../Service/api";
 import { Bounce, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { ISummoner } from "../../Models/summoner";
+import { RankCard } from "../../Components/RankCard";
 
 export const League = () => {
 	const [summoner, setSummoner] = useState<ISummoner>();
@@ -45,12 +46,15 @@ export const League = () => {
 
 		return;
 	}
+
 	return (
 		<div className="flex flex-col items-center justify-center w-screen h-screen">
 			<NavBar />
-			<div className="container flex h-screen bg-red-300">
+			<div className="container flex h-screen bg-gray-700">
 				{/* Side bar left */}
-				<div className="flex h-1/2 w-1/4 bg-gray-300"></div>
+				<div className="flex w-1/4">
+					<RankCard id={summoner?.id} />
+				</div>
 				{/* Side bar right */}
 				<div className="flex flex-col bg-gray-500 w-3/4 h-80">
 					{/* Profile */}
