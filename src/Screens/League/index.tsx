@@ -5,6 +5,8 @@ import { Bounce, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { ISummoner } from "../../Models/summoner";
 import { RankCard } from "../../Components/RankCard";
+import { MatchsCard } from "../../Components/MatchsCard";
+import "./styles.css";
 
 export const League = () => {
 	const [summoner, setSummoner] = useState<ISummoner>();
@@ -48,16 +50,16 @@ export const League = () => {
 	}
 
 	return (
-		<div className="flex flex-col items-center justify-center w-screen h-screen">
+		<div className="flex flex-col items-center justify-center w-screen h-screen scroll-">
 			<NavBar />
-			<div className="container flex h-screen bg-gray-700">
+			<div className="container flex h-screen">
 				{/* Side bar left */}
 				<div className="flex w-1/4">
 					<RankCard id={summoner?.id} />
 				</div>
 				{/* Side bar right */}
+				{/* Profile */}
 				<div className="flex flex-col border-solid border-2 rounded-xl bg-gray-500 w-3/4 h-36 mt-4 mr-4">
-					{/* Profile */}
 					<div className="flex flex-row items-center  h-36">
 						<img
 							className="size-32 rounded-full ml-2"
@@ -73,6 +75,8 @@ export const League = () => {
 							</div>
 						</div>
 					</div>
+					{/* Matchs Container */}
+					<MatchsCard puuid={summoner?.puuid} />
 				</div>
 			</div>
 		</div>
