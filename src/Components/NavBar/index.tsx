@@ -2,7 +2,7 @@ import IMAGES from "../../assets/Images";
 
 export const NavBar = () => {
 	return (
-		<div className=" flex h-16 w-screen items-center justify-center bg-gray-700">
+		<div className=" flex h-16 w-screen items-center justify-center bg-gray-700 border-b-2">
 			<div className="container flex justify-between">
 				<div className="flex ml-12">
 					<div className="flex h-7 mr-8">

@@ -56,7 +56,7 @@ export const League = () => {
 					<RankCard id={summoner?.id} />
 				</div>
 				{/* Side bar right */}
-				<div className="flex flex-col bg-gray-500 w-3/4 h-80">
+				<div className="flex flex-col border-solid border-2 rounded-xl bg-gray-500 w-3/4 h-36 mt-4 mr-4">
 					{/* Profile */}
 					<div className="flex flex-row items-center  h-36">
 						<img
