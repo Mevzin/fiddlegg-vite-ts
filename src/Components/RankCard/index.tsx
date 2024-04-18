@@ -36,7 +36,7 @@ export const RankCard = ({ id }: IProps) => {
 	}, [id]);
 
 	return (
-		<div className="flex flex-col justify-center items-center text-center w-full h-1/2 border-solid border-2 rounded-2xl m-4 bg-gray-500">
+		<div className="flex flex-col justify-center items-center text-center w-full h-96 border-solid border-2 rounded-2xl m-4 bg-gray-500">
 			{ranks?.map((rank: IRank) => (
 				<div className="flex flex-col text-white" key={rank.leagueId}>
 					{RankImage(rank.tier)}
