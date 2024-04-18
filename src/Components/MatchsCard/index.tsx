@@ -25,12 +25,12 @@ export const MatchsCard = ({ puuid }: IProps) => {
 	}, [puuid]);
 
 	async function getMatchs(puuid: string | undefined) {
+		if (puuid == undefined) return;
+
 		await apiBase
 			.get(`/league/searchMatchs/${puuid}`)
 			.then((res) => setMatchs(res.data.matchlist));
 	}
-
-	console.log(matchs);
 	return (
 		<div className="flex flex-col mt-8 ">
 			{matchs?.map((match) => (
