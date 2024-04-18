@@ -1,20 +1,11 @@
 import { useEffect, useState } from "react";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 import { apiBase } from "../../Service/api";
 import { IProfile } from "../../Models/profile";
 import { FaArrowRight } from "react-icons/fa";
-import "./style.css";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { ISummoner } from "../../Models/summoner";
 import "react-toastify/dist/ReactToastify.css";
-
-interface ISummoner {
-	id: string;
-	accountId: string;
-	puuid: string;
-	gameName: string;
-	tagLine: string;
-	profileIconId: number;
-	summonerLevel: number;
-}
+import "./style.css";
 
 export const WrapperProfile = (props: IProfile) => {
 	const [summoner, setSummoner] = useState<ISummoner>();
