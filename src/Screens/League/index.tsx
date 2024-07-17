@@ -59,19 +59,19 @@ export const League = () => {
 				</div>
 				{/* Side bar right */}
 				{/* Profile */}
-				<div className="flex flex-col border-solid border-2 rounded-xl bg-gray-500 w-3/4 h-36 mt-4 mr-4">
-					<div className="flex flex-row items-center  h-36">
-						<img
-							className="size-32 rounded-full ml-2"
-							src={`${dataLink}/${summoner?.profileIconId}.png`}
-						/>
+				<div className="flex flex-col w-3/4 h-36 mt-4 mr-4">
+					<div className="flex flex-row items-center border-solid border-2 rounded-xl bg-gray-500">
+						<div className="flex flex-col items-center ml-2">
+							<img
+								className="size-28 rounded-full "
+								src={`${dataLink}/${summoner?.profileIconId}.png`}
+							/>
+							<span className="absolute text-center mt-[86px] rounded-xl bg-black text-white w-8">{summoner?.summonerLevel}</span>
+						</div>
 						<div className="flex flex-col items-center ml-3">
 							<div className="text-3xl ">
 								<span className="text-gray-50">{summoner?.gameName}</span>
 								<span className="text-gray-300"> #{summoner?.tagLine}</span>
-							</div>
-							<div className="text-3xl text-gray-50">
-								Level {summoner?.summonerLevel}
 							</div>
 						</div>
 					</div>
