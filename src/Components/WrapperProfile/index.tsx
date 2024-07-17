@@ -6,6 +6,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { ISummoner } from "../../Models/summoner";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
+import { Link } from "react-router-dom";
 
 export const WrapperProfile = (props: IProfile) => {
 	const [summoner, setSummoner] = useState<ISummoner>();
@@ -58,9 +59,9 @@ export const WrapperProfile = (props: IProfile) => {
 						</h1>
 						<h1>Level: {summoner?.summonerLevel}</h1>
 					</div>
-					<div className="flex h-full w-11 bg-green-500 items-center justify-center hoverShowPage">
+					<Link to={`/league/${summoner?.gameName}/${summoner?.tagLine}`} className="flex h-full w-11 bg-green-500 items-center justify-center hoverShowPage">
 						<FaArrowRight />
-					</div>
+					</Link>
 				</div>
 			)}
 			<ToastContainer />
