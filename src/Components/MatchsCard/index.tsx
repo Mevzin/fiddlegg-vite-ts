@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { apiBase } from "../../Service/api";
 import IPlayer from "../../Models/player";
+import { MdOutlineImageNotSupported } from "react-icons/md";
+
 
 interface IProps {
 	puuid: string | undefined;
@@ -48,34 +50,50 @@ export const MatchesCard = ({ puuid }: IProps) => {
 									</div>
 
 									<div className="flex w-80 justify-between ml-4">
-										<img
+										{player.item0 != 0 ? (<img
 											className="size-10"
 											src={`${dragonURLItems}${player.item0}.png`}
-										/>
-										<img
+										/>) : (
+											<MdOutlineImageNotSupported size={'2.5rem'} />
+										)}
+										{player.item1 != 0 ? (<img
 											className="size-10"
 											src={`${dragonURLItems}${player.item1}.png`}
-										/>
-										<img
+										/>) : (
+											<MdOutlineImageNotSupported size={'2.5rem'} />
+										)}
+										{player.item2 != 0 ? (<img
 											className="size-10"
 											src={`${dragonURLItems}${player.item2}.png`}
-										/>
-										<img
+										/>) : (
+											<MdOutlineImageNotSupported size={'2.5rem'} />
+										)}
+										{player.item3 != 0 ? (<img
 											className="size-10"
 											src={`${dragonURLItems}${player.item3}.png`}
-										/>
-										<img
+										/>) : (
+											<MdOutlineImageNotSupported size={'2.5rem'} />
+										)}
+										{player.item4 != 0 ? (<img
 											className="size-10"
 											src={`${dragonURLItems}${player.item4}.png`}
-										/>
-										<img
+										/>) : (
+											<MdOutlineImageNotSupported size={'2.5rem'} />
+										)}
+										{player.item5 != 0 ? (<img
 											className="size-10"
 											src={`${dragonURLItems}${player.item5}.png`}
-										/>
-										<img
+										/>) : (
+											<MdOutlineImageNotSupported size={'2.5rem'} />
+										)}
+
+										{player.item6 != 0 ? (<img
 											className="size-10"
 											src={`${dragonURLItems}${player.item6}.png`}
-										/>
+										/>) : (
+											<MdOutlineImageNotSupported size={'2.5rem'} />
+										)}
+
 									</div>
 								</div>
 							)}
