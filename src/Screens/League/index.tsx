@@ -5,14 +5,14 @@ import { Bounce, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { ISummoner } from "../../Models/summoner";
 import { RankCard } from "../../Components/RankCard";
-import { MatchsCard } from "../../Components/MatchsCard";
+import { MatchesCard } from "../../Components/MatchsCard";
 import "./styles.css";
 
 export const League = () => {
 	const [summoner, setSummoner] = useState<ISummoner>();
 	const { gameName, tagLine } = useParams();
 	const dataLink: string =
-		"https://ddragon.leagueoflegends.com/cdn/14.7.1/img/profileicon";
+		"https://ddragon.leagueoflegends.com/cdn/14.14.1/img/profileicon";
 
 	useEffect(() => {
 		searchSummoner(gameName, tagLine);
@@ -53,17 +53,14 @@ export const League = () => {
 		<div className="flex flex-col items-center justify-center w-screen h-screen scroll-">
 			<NavBar />
 			<div className="container flex h-screen">
-				{/* Side bar left */}
 				<div className="flex w-1/4">
 					<RankCard id={summoner?.id} />
 				</div>
-				{/* Side bar right */}
-				{/* Profile */}
 				<div className="flex flex-col w-3/4 h-36 mt-4 mr-4">
-					<div className="flex flex-row items-center border-solid border-2 rounded-xl bg-gray-500">
+					<div className="flex flex-row items-center border-solid border-2 rounded-xl h-[15rem] bg-gray-500">
 						<div className="flex flex-col items-center ml-2">
 							<img
-								className="size-28 rounded-full "
+								className="size-24 rounded-full "
 								src={`${dataLink}/${summoner?.profileIconId}.png`}
 							/>
 							<span className="absolute text-center mt-[86px] rounded-xl bg-black text-white w-8">{summoner?.summonerLevel}</span>
@@ -75,8 +72,7 @@ export const League = () => {
 							</div>
 						</div>
 					</div>
-					{/* Matchs Container */}
-					<MatchsCard puuid={summoner?.puuid} />
+					<MatchesCard puuid={summoner?.puuid} />
 				</div>
 			</div>
 		</div>

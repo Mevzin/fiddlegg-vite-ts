@@ -13,27 +13,27 @@ interface IMatch {
 	};
 }
 
-export const MatchsCard = ({ puuid }: IProps) => {
-	const [matchs, setMatchs] = useState<IMatch[]>();
-	const dragonURLItens =
-		"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/";
+export const MatchesCard = ({ puuid }: IProps) => {
+	const [matches, setMatches] = useState<IMatch[]>();
+	const dragonURLItems =
+		"http://ddragon.leagueoflegends.com/cdn/14.14.1/img/item/";
 	const dragonURLChampions =
-		"https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/";
+		"https://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/";
 
 	useEffect(() => {
-		getMatchs(puuid);
+		getMatches(puuid);
 	}, [puuid]);
 
-	async function getMatchs(puuid: string | undefined) {
+	async function getMatches(puuid: string | undefined) {
 		if (puuid == undefined) return;
 
 		await apiBase
 			.get(`/league/searchMatchs/${puuid}`)
-			.then((res) => setMatchs(res.data.matchlist));
+			.then((res) => setMatches(res.data.matchlist));
 	}
 	return (
 		<div className="flex flex-col mt-8 ">
-			{matchs?.map((match) => (
+			{matches?.map((match) => (
 				<div key={match.info.gameId}>
 					{match.info.participants?.map((player: IPlayer) => (
 						<div key={player.summonerName}>
@@ -50,31 +50,31 @@ export const MatchsCard = ({ puuid }: IProps) => {
 									<div className="flex w-80 justify-between ml-4">
 										<img
 											className="size-10"
-											src={`${dragonURLItens}${player.item0}.png`}
+											src={`${dragonURLItems}${player.item0}.png`}
 										/>
 										<img
 											className="size-10"
-											src={`${dragonURLItens}${player.item1}.png`}
+											src={`${dragonURLItems}${player.item1}.png`}
 										/>
 										<img
 											className="size-10"
-											src={`${dragonURLItens}${player.item2}.png`}
+											src={`${dragonURLItems}${player.item2}.png`}
 										/>
 										<img
 											className="size-10"
-											src={`${dragonURLItens}${player.item3}.png`}
+											src={`${dragonURLItems}${player.item3}.png`}
 										/>
 										<img
 											className="size-10"
-											src={`${dragonURLItens}${player.item4}.png`}
+											src={`${dragonURLItems}${player.item4}.png`}
 										/>
 										<img
 											className="size-10"
-											src={`${dragonURLItens}${player.item5}.png`}
+											src={`${dragonURLItems}${player.item5}.png`}
 										/>
 										<img
 											className="size-10"
-											src={`${dragonURLItens}${player.item6}.png`}
+											src={`${dragonURLItems}${player.item6}.png`}
 										/>
 									</div>
 								</div>
