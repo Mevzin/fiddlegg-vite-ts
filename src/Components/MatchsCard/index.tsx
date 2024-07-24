@@ -45,7 +45,7 @@ export const MatchesCard = ({ puuid }: IProps) => {
 							{player.puuid == puuid && (
 								<div className="flex flex-row border-solid border-2 rounded-xl items-center bg-gray-500 m-1 h-40">
 									<div className="flex flex-col justify-center items-center ml-2">
-										<span>{player.championName}</span>
+										<span className="text-white font-bold">{player.championName.toUpperCase()}</span>
 										<img
 											className="size-24 rounded-full border-2 mt-1"
 											src={`${dragonURLChampions}${player.championName}.png`}
@@ -99,19 +99,19 @@ export const MatchesCard = ({ puuid }: IProps) => {
 
 										</div>
 										<div className="flex my-2 justify-evenly items-center">
-											<div className="flex flex-col justify-center items-center text-white">
+											<div className="flex flex-col justify-center items-center text-white font-bold">
 												<span>K/D/A</span>
 												<span>{player.kills}/{player.deaths}/{player.assists}</span>
 											</div>
-											<div className="flex flex-col justify-center items-center text-white">
+											<div className="flex flex-col justify-center items-center text-white font-bold">
 												<span>Cs</span>
 												<span>{player.totalMinionsKilled + player.neutralMinionsKilled} cs</span>
 											</div>
-											<div className="flex flex-col justify-center items-center text-white">
+											<div className="flex flex-col justify-center items-center text-white font-bold">
 												<span>AMA</span>
 												<span>{calcAmA(player.kills, player.assists, player.deaths)}</span>
 											</div>
-											<div className="flex flex-col justify-center items-center text-white">
+											<div className="flex flex-col justify-center items-center text-white font-bold">
 												<span>Cs/Min</span>
 												<span>{calcCsMinute(match.info.gameDuration, player.totalMinionsKilled + player.neutralMinionsKilled)}</span>
 											</div>
