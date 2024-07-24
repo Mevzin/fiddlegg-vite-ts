@@ -57,7 +57,7 @@ export const League = () => {
 					<RankCard id={summoner?.id} />
 				</div>
 				<div className="flex flex-col w-3/4 h-36 mt-4 mr-4">
-					<div className="flex flex-row items-center border-solid border-2 rounded-xl h-[15rem] bg-gray-500">
+					<div className="flex flex-row items-center rounded-xl h-[15rem]">
 						<div className="flex flex-col items-center ml-2">
 							<img
 								className="size-24 rounded-full "
