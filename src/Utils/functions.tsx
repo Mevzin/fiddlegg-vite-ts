@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EloSummoner } from "../Components/EloSummoner";
 
 import iron from "../assets/ranksimages/Iron.png";
@@ -44,3 +46,28 @@ export const getTypeRank = (type: string) => {
 			return "Ranked Solo";
 	}
 };
+
+export const calcAmA = (kills: number, assits: number, deaths: number) => {
+	const result = ((kills + assits) / deaths).toFixed(2);
+	return result
+}
+
+export const calcMatchTime = (time: number) => {
+	const d = new Date(1000 * Math.round(time / 1000)); // round to nearest second
+	function pad(i: any) {
+		return ('0' + i).slice(-2);
+	}
+	const str = pad(d.getUTCMinutes()) + 'min ' + pad(d.getUTCSeconds()) + "sec";
+	return str;
+}
+
+export const calcCsMinute = (time: number, cs: number) => {
+	const d = new Date(1000 * Math.round(time / 1000)); // round to nearest second
+	function pad(i: any) {
+		return ('0' + i).slice(-2);
+	}
+	const min: any = pad(d.getUTCSeconds())
+
+	const mediaCs = cs / min
+	return mediaCs.toFixed(2);
+}
