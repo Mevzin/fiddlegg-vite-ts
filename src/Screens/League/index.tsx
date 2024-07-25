@@ -50,7 +50,7 @@ export const League = () => {
 	}
 
 	return (
-		<div className="flex flex-col items-center justify-center w-screen h-screen scroll-">
+		<div className="flex flex-col items-center justify-center w-screen h-screen overflow-x-hidden">
 			<NavBar />
 			<div className="container flex h-screen">
 				<div className="flex w-1/4">
