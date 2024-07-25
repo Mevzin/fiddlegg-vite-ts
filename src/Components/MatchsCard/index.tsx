@@ -35,7 +35,6 @@ export const MatchesCard = ({ puuid }: IProps) => {
 			.get(`/league/searchMatchs/${puuid}`)
 			.then((res) => setMatches(res.data.matchlist));
 	}
-
 	return (
 		<div className="flex flex-col mt-8 ">
 			{matches?.map((match) => (
@@ -116,6 +115,21 @@ export const MatchesCard = ({ puuid }: IProps) => {
 												<span>{calcCsMinute(match.info.gameDuration, player.totalMinionsKilled + player.neutralMinionsKilled)}</span>
 											</div>
 										</div>
+									</div>
+									<div>
+										{match.info.participants?.map((players: IPlayer) => (
+											<div key={players.puuid}>
+												{players.teamId == player.teamId && (
+													<div className="flex text-white font-bold gap-2 mb-1">
+														<img
+															className="size-6 rounded-sm border-2"
+															src={`${dragonURLChampions}${players.championName}.png`}
+														/>
+														<span>{players.riotIdGameName} #{players.riotIdTagline}</span>
+													</div>
+												)}
+											</div>
+										))}
 									</div>
 								</div>
 							)}

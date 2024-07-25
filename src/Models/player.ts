@@ -79,4 +79,6 @@ export default interface IPlayer {
     wardsPlaced: number;
     win: boolean;
     neutralMinionsKilled: number;
+    riotIdGameName: string;
+    riotIdTagline: string;
 }
