@@ -14,6 +14,7 @@ interface IMatch {
 		gameId: string;
 		gameDuration: number;
 		participants: [];
+		gameMode: string;
 	};
 }
 
@@ -51,6 +52,9 @@ export const MatchesCard = ({ puuid }: IProps) => {
 										/>
 									</div>
 									<div className="flex flex-col">
+										<div className="flex justify-center mb-2 text-center">
+											<span className="font-bold text-white"><span className={player.win ? 'text-green-500' : 'text-red-500'}>{player.win ? 'Vitoria' : 'Derrota'}</span> * {player.lane} * {match.info.gameMode}</span>
+										</div>
 										<div className="flex w-80 justify-between mx-4">
 											{player.item0 != 0 ? (<img
 												className="size-10"
@@ -125,7 +129,7 @@ export const MatchesCard = ({ puuid }: IProps) => {
 															className="size-6 rounded-sm border-2"
 															src={`${dragonURLChampions}${players.championName}.png`}
 														/>
-														<span>{players.riotIdGameName} #{players.riotIdTagline}</span>
+														<span>{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
 													</div>
 												)}
 											</div>
