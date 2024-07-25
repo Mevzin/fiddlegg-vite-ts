@@ -3,6 +3,7 @@ import { apiBase } from "../../Service/api";
 import IPlayer from "../../Models/player";
 import { MdOutlineImageNotSupported } from "react-icons/md";
 import { calcAmA, calcCsMinute } from "../../Utils/functions";
+import { Link } from "react-router-dom";
 
 
 interface IProps {
@@ -129,7 +130,9 @@ export const MatchesCard = ({ puuid }: IProps) => {
 															className="size-6 rounded-sm border-2"
 															src={`${dragonURLChampions}${players.championName}.png`}
 														/>
-														<span>{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
+														<Link to={`/league/${players.riotIdGameName}/${players.riotIdTagline}`}>
+															<span>{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
+														</Link>
 													</div>
 												)}
 											</div>
