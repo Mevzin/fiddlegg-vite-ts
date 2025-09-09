@@ -119,7 +119,7 @@ export class DataDragonService {
    */
   static async preloadCommonAssets(championNames: string[] = [], itemIds: (string | number)[] = []): Promise<void> {
     try {
-      console.log('🔄 Pré-carregando assets do Data Dragon...');
+  
       
       const championPromises = championNames.map(name => this.getChampionIcon(name));
       
@@ -127,7 +127,7 @@ export class DataDragonService {
       
       await Promise.allSettled([...championPromises, ...itemPromises]);
       
-      console.log('✅ Assets pré-carregados com sucesso!');
+  
     } catch (error) {
       console.error('❌ Erro ao pré-carregar assets:', error);
     }
@@ -138,7 +138,7 @@ export class DataDragonService {
    */
   static clearCache(): void {
     this.urlCache.clear();
-    console.log('🗑️ Cache de URLs limpo');
+
   }
   
   /**

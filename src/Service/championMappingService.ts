@@ -48,13 +48,13 @@ export class ChampionMappingService {
 
       const data: ChampionsResponse = await response.json();
       
-      // Mapeia championId (key numérica) para championKey (nome usado nas URLs)
+  
       Object.values(data.data).forEach(champion => {
         this.championMap.set(champion.key, champion.id);
       });
 
       this.isLoaded = true;
-      console.log(`✅ ${this.championMap.size} campeões carregados no mapeamento`);
+      
     } catch (error) {
       console.error('❌ Erro ao carregar dados de campeões:', error);
       throw error;
@@ -99,6 +99,6 @@ export class ChampionMappingService {
   }
 }
 
-// Função de conveniência para uso direto
+
 export const getChampionKeyById = (championId: string | number) => 
   ChampionMappingService.getChampionKeyById(championId);

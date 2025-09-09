@@ -1,5 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EloSummoner } from "../Components/EloSummoner";
 
 import iron from "../assets/ranksimages/Iron.png";
@@ -35,6 +33,42 @@ export const RankImage = (rank: string) => {
 			return <EloSummoner src={challenger} />;
 		case "EMERALD":
 			return <EloSummoner src={emerald} />;
+	}
+};
+
+interface IRankData {
+	tier: string;
+	rank: string;
+	queueType: string;
+	leaguePoints: number;
+}
+
+export const RankImageWithData = (rankData: IRankData) => {
+	const { tier, rank, queueType, leaguePoints } = rankData;
+	
+	switch (tier) {
+		case "BRONZE":
+			return <EloSummoner src={bronze} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "IRON":
+			return <EloSummoner src={iron} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "SILVER":
+			return <EloSummoner src={silver} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "GOLD":
+			return <EloSummoner src={gold} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "PLATINUM":
+			return <EloSummoner src={platinum} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "DIAMOND":
+			return <EloSummoner src={diamond} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "GRANDMASTER":
+			return <EloSummoner src={grandmaster} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "MASTER":
+			return <EloSummoner src={master} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "CHALLENGER":
+			return <EloSummoner src={challenger} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		case "EMERALD":
+			return <EloSummoner src={emerald} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
+		default:
+			return <EloSummoner src={iron} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
 	}
 };
 

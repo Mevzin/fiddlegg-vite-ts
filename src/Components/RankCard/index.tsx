@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiBase } from "../../Service/api";
-import { RankImage, getTypeRank } from "../../Utils/functions";
+import { RankImageWithData } from "../../Utils/functions";
 
 interface IProps {
 	id: string | undefined;
@@ -27,8 +27,13 @@ export const RankCard = ({ id }: IProps) => {
 	async function getAccountRank(id: string | undefined) {
 		if (id == undefined) return;
 		await apiBase
-			.get(`league/getRankProfile/${id}`)
-			.then((res) => setRanks(res.data.rank));
+			.get(`/league/getRankProfile/${id}`)
+			.then((res) => {
+				setRanks(res.data.rank);
+			})
+			.catch((error) => {
+				console.error('Erro ao buscar rank:', error);
+			});
 	}
 
 	useEffect(() => {
@@ -36,14 +41,21 @@ export const RankCard = ({ id }: IProps) => {
 	}, [id]);
 
 	return (
-		<div className="flex flex-col justify-center items-center text-center w-full h-96 border-solid border-2 rounded-2xl m-4 bg-gray-500">
+		<div className="flex flex-col justify-center items-center text-center w-full h-96 border-solid border-2 rounded-2xl m-4 bg-gray-700 gap-4">
+			{!ranks && (
+				<div className="text-white">Carregando ranks...</div>
+			)}
+			{ranks && ranks.length === 0 && (
+				<div className="text-white">Nenhum rank encontrado</div>
+			)}
 			{ranks?.map((rank: IRank) => (
-				<div className="flex flex-col text-white" key={rank.leagueId}>
-					{RankImage(rank.tier)}
-					<span>{getTypeRank(rank.queueType)}</span>
-					<span>
-						{rank.tier} {rank.rank}
-					</span>
+				<div key={rank.leagueId}>
+					{RankImageWithData({
+						tier: rank.tier,
+						rank: rank.rank,
+						queueType: rank.queueType,
+						leaguePoints: rank.leaguePoints
+					})}
 				</div>
 			))}
 		</div>

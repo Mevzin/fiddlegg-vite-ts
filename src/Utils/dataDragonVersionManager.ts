@@ -23,7 +23,7 @@ export class DataDragonVersionManager {
     }
 
     try {
-      console.log('🔄 Buscando versão mais recente do Data Dragon...');
+
       const response = await fetch(this.VERSION_URL);
 
       if (!response.ok) {
@@ -40,14 +40,14 @@ export class DataDragonVersionManager {
 
       this.saveCachedVersionToStorage(latestVersion);
 
-      console.log(`✅ Versão mais recente: ${latestVersion}`);
+
       return latestVersion;
     } catch (error) {
       console.error('❌ Erro ao buscar versão do Data Dragon:', error);
 
 
       const fallbackVersion = this.FALLBACK_VERSION;
-      console.log(`🔄 Usando versão fallback: ${fallbackVersion}`);
+
       return fallbackVersion;
     }
   }

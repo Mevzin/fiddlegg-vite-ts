@@ -16,6 +16,7 @@ export const League = () => {
 	const [profileUrls, setProfileUrls] = useState<Record<string, string>>({});
 	const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
 	const [dominantColor, setDominantColor] = useState<string>('#374151');
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [championMastery, setChampionMastery] = useState<{
 		championId: number;
 		championLevel: number;
@@ -28,7 +29,6 @@ export const League = () => {
 		championPoints: number;
 	} | null>(null);
 	const [championIconUrl, setChampionIconUrl] = useState<string>('');
-	console.log(championMastery)
 
 	useEffect(() => {
 		searchSummoner(gameName, tagLine);
@@ -41,7 +41,7 @@ export const League = () => {
 		}
 	}, [summoner]);
 
-	// Função para extrair cor predominante da imagem
+
 	const extractDominantColor = (imageUrl: string): Promise<string> => {
 		return new Promise((resolve) => {
 			const img = new Image();
@@ -88,7 +88,7 @@ export const League = () => {
 				const url = await getProfileIconUrl(profileIconId);
 				setProfileUrls(prev => ({ ...prev, [profileIconId]: url }));
 
-				// Extrair cor predominante
+
 				const color = await extractDominantColor(url);
 				setDominantColor(color);
 			} catch (error) {
@@ -115,9 +115,8 @@ export const League = () => {
 				const topChamp = masteryData[0];
 				setTopChampion(topChamp);
 
-				// Buscar ícone do campeão
+
 				try {
-					// Converter championId para championKey
 					const championKey = await getChampionKeyById(topChamp.championId);
 					const iconUrl = await getChampionIconUrl(championKey);
 					setChampionIconUrl(iconUrl);
@@ -174,7 +173,7 @@ export const League = () => {
 					}
 				});
 
-				// Encontrar a lane mais jogada
+
 				const mostPlayed = Object.entries(laneCount).reduce((a, b) =>
 					a[1] > b[1] ? a : b
 				);
@@ -224,7 +223,7 @@ export const League = () => {
 			<NavBar />
 			<div className="container flex h-screen">
 				<div className="flex w-1/4">
-					<RankCard id={summoner?.id} />
+					<RankCard id={summoner?.puuid} />
 				</div>
 				<div className="flex flex-col w-3/4 h-36 mt-4 mr-4">
 					<div
@@ -235,7 +234,7 @@ export const League = () => {
 							boxShadow: `0 8px 32px ${dominantColor}20`
 						}}
 					>
-						{/* Imagem do perfil */}
+
 						<div className="flex flex-col items-center relative">
 							{summoner?.profileIconId && profileUrls[summoner.profileIconId] ? (
 								<img
@@ -275,13 +274,13 @@ export const League = () => {
 							</span>
 						</div>
 
-						{/* Nick */}
+
 						<div className="text-4xl">
 							<span className="text-gray-50">{summoner?.gameName}</span>
 							<span className="text-gray-300"> #{summoner?.tagLine}</span>
 						</div>
 
-						{/* Lane mais jogada */}
+
 						{mostPlayedLane && (
 							<span
 								className="px-5 py-3 rounded-full text-xl font-bold text-white"
@@ -294,7 +293,7 @@ export const League = () => {
 							</span>
 						)}
 
-						{/* Campeão com maior maestria */}
+
 						{topChampion && (
 							<div className="flex items-center">
 								{championIconUrl && (

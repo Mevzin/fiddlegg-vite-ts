@@ -10,9 +10,6 @@ export const apiBase = axios.create({
 
 apiBase.interceptors.request.use(
     (config) => {
-        if (import.meta.env.DEV) {
-            console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`);
-        }
         return config;
     },
     (error) => {
@@ -23,9 +20,6 @@ apiBase.interceptors.request.use(
 
 apiBase.interceptors.response.use(
     (response: AxiosResponse) => {
-        if (import.meta.env.DEV) {
-            console.log(`✅ API Response: ${response.status} ${response.config.url}`);
-        }
         return response;
     },
     (error: AxiosError) => {
