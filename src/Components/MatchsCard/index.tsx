@@ -4,7 +4,7 @@ import IPlayer from "../../Models/player";
 import { MdOutlineImageNotSupported } from "react-icons/md";
 import { calcAmA, calcCsMinute } from "../../Utils/functions";
 import { Link } from "react-router-dom";
-import { getChampionIconUrl, getItemIconUrl } from "../../Service/dataDragonService";
+import { getChampionSplashUrl, getChampionIconUrl, getItemIconUrl } from "../../Service/dataDragonService";
 
 interface IProps {
 	puuid: string | undefined;
@@ -22,6 +22,7 @@ interface IMatch {
 export const MatchesCard = ({ puuid }: IProps) => {
 	const [matches, setMatches] = useState<IMatch[]>([]);
 	const [championUrls, setChampionUrls] = useState<Record<string, string>>({});
+	const [championIconUrls, setChampionIconUrls] = useState<Record<string, string>>({});
 	const [itemUrls, setItemUrls] = useState<Record<string, string>>({});
 	const [loadingImages, setLoadingImages] = useState<Record<string, boolean>>({});
 	const [isLoading, setIsLoading] = useState(false);
@@ -42,12 +43,26 @@ export const MatchesCard = ({ puuid }: IProps) => {
 		if (!championUrls[championName] && !loadingImages[`champion_${championName}`]) {
 			setLoadingImages(prev => ({ ...prev, [`champion_${championName}`]: true }));
 			try {
-				const url = await getChampionIconUrl(championName);
+				const url = await getChampionSplashUrl(championName);
 				setChampionUrls(prev => ({ ...prev, [championName]: url }));
 			} catch (error) {
-				console.error('Erro ao carregar icone do campeao:', error);
+				console.error('Erro ao carregar splash do campeao:', error);
 			} finally {
 				setLoadingImages(prev => ({ ...prev, [`champion_${championName}`]: false }));
+			}
+		}
+	};
+
+	const loadChampionIconUrl = async (championName: string) => {
+		if (!championIconUrls[championName] && !loadingImages[`champion_icon_${championName}`]) {
+			setLoadingImages(prev => ({ ...prev, [`champion_icon_${championName}`]: true }));
+			try {
+				const url = await getChampionIconUrl(championName);
+				setChampionIconUrls(prev => ({ ...prev, [championName]: url }));
+			} catch (error) {
+				console.error('Erro ao carregar ícone do campeão:', error);
+			} finally {
+				setLoadingImages(prev => ({ ...prev, [`champion_icon_${championName}`]: false }));
 			}
 		}
 	};
@@ -72,7 +87,7 @@ export const MatchesCard = ({ puuid }: IProps) => {
 				match.info.participants?.forEach(player => {
 					const typedPlayer = player as IPlayer;
 					loadChampionUrl(typedPlayer.championName);
-					
+
 					const items = [
 						typedPlayer.item0,
 						typedPlayer.item1,
@@ -82,7 +97,7 @@ export const MatchesCard = ({ puuid }: IProps) => {
 						typedPlayer.item5,
 						typedPlayer.item6
 					];
-					
+
 					items.forEach(item => {
 						if (item !== 0) loadItemUrl(item);
 					});
@@ -146,29 +161,22 @@ export const MatchesCard = ({ puuid }: IProps) => {
 					{match.info.participants?.map((player: IPlayer, playerIndex) => (
 						<div key={`${match.info.gameId}-player-${playerIndex}-${player.summonerName || player.puuid}`}>
 							{player.puuid == puuid && (
-								<div className={`flex flex-row border-solid border-2 rounded-xl items-center m-1 h-64 bg-gradient-to-l ${
-									player.win 
-										? 'from-green-600/30 to-gray-600 border-green-500/50' 
-										: 'from-red-600/30 to-gray-600 border-red-500/50'
-								}`}>
+								<div className={`flex flex-row border-solid border-2 rounded-xl items-center m-1 h-64 bg-gradient-to-l ${player.win
+									? 'from-green-600/30 to-gray-600 border-green-500/50'
+									: 'from-red-600/30 to-gray-600 border-red-500/50'
+									}`}>
 									<div className="flex flex-col justify-center items-center ml-2">
-										<span className="text-white font-bold">{player.championName.toUpperCase()}</span>
-										{championUrls[player.championName] ? (
+										<div className="size-20 rounded-md border bg-gray-700 flex items-center justify-center">
+
 											<img
-												className="size-20 rounded-md border object-cover"
-												src={championUrls[player.championName]}
+												className="rounded-md border object-cover"
+												src={championIconUrls[player.championName]}
 												alt={player.championName}
 												style={{ objectPosition: 'center' }}
 											/>
-										) : (
-											<div className="size-20 rounded-md border bg-gray-700 flex items-center justify-center">
-												{loadingImages[`champion_${player.championName}`] ? (
-													<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-												) : (
-													<span className="text-white text-sm">{player.championName.slice(0, 3)}</span>
-												)}
-											</div>
-										)}
+
+
+										</div>
 									</div>
 									<div className="flex flex-col">
 										<div className="flex justify-center mb-2 text-center">
@@ -233,16 +241,16 @@ export const MatchesCard = ({ puuid }: IProps) => {
 												<div key={`${match.info.gameId}-${players.puuid}`}>
 													{players.teamId == player.teamId && (
 														<div className="flex text-white font-bold gap-2 mb-1 items-center">
-															{championUrls[players.championName] ? (
+															{(loadChampionIconUrl(players.championName), championIconUrls[players.championName]) ? (
 																<img
-																	className="size-8 rounded-md border object-cover"
-																	src={championUrls[players.championName]}
+																	className="h-8 w-8 rounded-md border object-cover"
+																	src={championIconUrls[players.championName]}
 																	alt={players.championName}
 																	style={{ objectPosition: 'center' }}
 																/>
 															) : (
 																<div className="size-8 rounded-md border bg-gray-700 flex items-center justify-center">
-																	{loadingImages[`champion_${players.championName}`] ? (
+																	{loadingImages[`champion_icon_${players.championName}`] ? (
 																		<div className="animate-spin rounded-full h-2 w-2 border-b-2 border-white"></div>
 																	) : (
 																		<span className="text-white text-xs">{players.championName.slice(0, 2)}</span>
@@ -251,11 +259,10 @@ export const MatchesCard = ({ puuid }: IProps) => {
 															)}
 															<div className="flex flex-col">
 																<Link to={`/league/${encodeURIComponent(players.riotIdGameName)}/${encodeURIComponent(players.riotIdTagline)}`}>
-																	<span className={`text-sm ${
-																		players.puuid === puuid 
-																			? 'text-yellow-400' 
-																			: 'text-green-400'
-																	}`}>
+																	<span className={`text-sm ${players.puuid === puuid
+																		? 'text-yellow-400'
+																		: 'text-green-400'
+																		}`}>
 																		{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span>
 																	</span>
 																</Link>
@@ -276,16 +283,16 @@ export const MatchesCard = ({ puuid }: IProps) => {
 												<div key={`${match.info.gameId}-enemy-${players.puuid}`}>
 													{players.teamId != player.teamId && (
 														<div className="flex text-white font-bold gap-2 mb-1 items-center">
-															{championUrls[players.championName] ? (
+															{(loadChampionIconUrl(players.championName), championIconUrls[players.championName]) ? (
 																<img
 																	className="size-8 rounded-md border object-cover"
-																	src={championUrls[players.championName]}
+																	src={championIconUrls[players.championName]}
 																	alt={players.championName}
 																	style={{ objectPosition: 'center' }}
 																/>
 															) : (
 																<div className="size-8 rounded-md border bg-gray-700 flex items-center justify-center">
-																	{loadingImages[`champion_${players.championName}`] ? (
+																	{loadingImages[`champion_icon_${players.championName}`] ? (
 																		<div className="animate-spin rounded-full h-2 w-2 border-b-2 border-white"></div>
 																	) : (
 																		<span className="text-white text-xs">{players.championName.slice(0, 2)}</span>
@@ -294,8 +301,8 @@ export const MatchesCard = ({ puuid }: IProps) => {
 															)}
 															<div className="flex flex-col">
 																<Link to={`/league/${encodeURIComponent(players.riotIdGameName)}/${encodeURIComponent(players.riotIdTagline)}`}>
-																			<span className="text-sm text-red-400">{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
-																		</Link>
+																	<span className="text-sm text-red-400">{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
+																</Link>
 																<div className="flex gap-3 text-xs text-gray-300">
 																	<span>KDA: {players.kills}/{players.deaths}/{players.assists}</span>
 																	<span>CS: {players.totalMinionsKilled + players.neutralMinionsKilled}</span>
@@ -314,8 +321,8 @@ export const MatchesCard = ({ puuid }: IProps) => {
 					))}
 				</div>
 			))}
-			
-			
+
+
 			<div ref={loadingRef} className="flex justify-center py-4">
 				{isLoading && (
 					<div className="flex items-center gap-2 text-white">
