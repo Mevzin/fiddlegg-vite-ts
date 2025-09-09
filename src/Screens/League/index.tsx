@@ -6,17 +6,38 @@ import { useParams } from "react-router-dom";
 import { ISummoner } from "../../Models/summoner";
 import { RankCard } from "../../Components/RankCard";
 import { MatchesCard } from "../../Components/MatchsCard";
+import { getProfileIconUrl } from "../../Service/dataDragonService";
 import "./styles.css";
 
 export const League = () => {
 	const [summoner, setSummoner] = useState<ISummoner>();
 	const { gameName, tagLine } = useParams();
-	const dataLink: string =
-		"https://ddragon.leagueoflegends.com/cdn/14.14.1/img/profileicon";
+	const [profileUrls, setProfileUrls] = useState<Record<string, string>>({});
+	const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
 
 	useEffect(() => {
 		searchSummoner(gameName, tagLine);
 	}, [gameName, tagLine]);
+
+	const loadProfileUrl = async (profileIconId: number) => {
+		if (!profileUrls[profileIconId] && !loadingProfile) {
+			setLoadingProfile(true);
+			try {
+				const url = await getProfileIconUrl(profileIconId);
+				setProfileUrls(prev => ({ ...prev, [profileIconId]: url }));
+			} catch (error) {
+				console.error(`Erro ao carregar ícone de perfil ${profileIconId}:`, error);
+			} finally {
+				setLoadingProfile(false);
+			}
+		}
+	};
+
+	useEffect(() => {
+		if (summoner?.profileIconId) {
+			loadProfileUrl(summoner.profileIconId);
+		}
+	}, [summoner]);
 
 	async function searchSummoner(
 		name: string | undefined,
@@ -59,10 +80,21 @@ export const League = () => {
 				<div className="flex flex-col w-3/4 h-36 mt-4 mr-4">
 					<div className="flex flex-row items-center rounded-xl h-[15rem]">
 						<div className="flex flex-col items-center ml-2">
-							<img
-								className="size-24 rounded-full "
-								src={`${dataLink}/${summoner?.profileIconId}.png`}
-							/>
+							{summoner?.profileIconId && profileUrls[summoner.profileIconId] ? (
+								<img
+									className="size-24 rounded-full"
+									src={profileUrls[summoner.profileIconId]}
+									alt={`Ícone do perfil de ${summoner.gameName}`}
+								/>
+							) : (
+								<div className="size-24 rounded-full bg-gray-700 flex items-center justify-center">
+									{loadingProfile ? (
+										<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+									) : (
+										<span className="text-white text-sm font-bold">{summoner?.gameName?.slice(0, 2).toUpperCase()}</span>
+									)}
+								</div>
+							)}
 							<span className="absolute text-center mt-[86px] rounded-xl bg-black text-white w-8">{summoner?.summonerLevel}</span>
 						</div>
 						<div className="flex flex-col items-center ml-3">

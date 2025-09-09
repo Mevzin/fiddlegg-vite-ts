@@ -53,7 +53,7 @@ export const calcAmA = (kills: number, assits: number, deaths: number) => {
 }
 
 export const calcMatchTime = (time: number) => {
-	const d = new Date(1000 * Math.round(time / 1000)); // round to nearest second
+	const d = new Date(1000 * Math.round(time / 1000));
 	function pad(i: any) {
 		return ('0' + i).slice(-2);
 	}
@@ -62,7 +62,7 @@ export const calcMatchTime = (time: number) => {
 }
 
 export const calcCsMinute = (time: number, cs: number) => {
-	const d = new Date(1000 * Math.round(time / 1000)); // round to nearest second
+	const d = new Date(1000 * Math.round(time / 1000));
 	function pad(i: any) {
 		return ('0' + i).slice(-2);
 	}

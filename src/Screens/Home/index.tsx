@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { WrapperProfile } from "../../Components/WrapperProfile";
+import WrapperProfile from "../../Components/WrapperProfile/index";
 import IMAGES from "../../assets/Images";
 
 export const Home = () => {
