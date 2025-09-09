@@ -92,7 +92,11 @@ export const MatchesCard = ({ puuid }: IProps) => {
 					{match.info.participants?.map((player: IPlayer, playerIndex) => (
 						<div key={`${match.info.gameId}-player-${playerIndex}-${player.summonerName || player.puuid}`}>
 							{player.puuid == puuid && (
-								<div className="flex flex-row border-solid border-2 rounded-xl items-center bg-gray-500 m-1 h-40">
+								<div className={`flex flex-row border-solid border-2 rounded-xl items-center m-1 h-64 bg-gradient-to-l ${
+									player.win 
+										? 'from-green-600/30 to-gray-600 border-green-500/50' 
+										: 'from-red-600/30 to-gray-600 border-red-500/50'
+								}`}>
 									<div className="flex flex-col justify-center items-center ml-2">
 										<span className="text-white font-bold">{player.championName.toUpperCase()}</span>
 										{championUrls[player.championName] ? (
@@ -164,33 +168,84 @@ export const MatchesCard = ({ puuid }: IProps) => {
 											</div>
 										</div>
 									</div>
-									<div>
-										{match.info.participants?.map((players: IPlayer) => (
-											<div key={`${match.info.gameId}-${players.puuid}`}>
-												{players.teamId == player.teamId && (
-													<div className="flex text-white font-bold gap-2 mb-1">
-														{championUrls[players.championName] ? (
-															<img
-																className="size-6 rounded-sm border-2"
-																src={championUrls[players.championName]}
-																alt={players.championName}
-															/>
-														) : (
-															<div className="size-6 rounded-sm border-2 bg-gray-700 flex items-center justify-center">
-																{loadingImages[`champion_${players.championName}`] ? (
-																	<div className="animate-spin rounded-full h-2 w-2 border-b-2 border-white"></div>
-																) : (
-																	<span className="text-white text-xs">{players.championName.slice(0, 2)}</span>
-																)}
+									<div className="flex gap-8">
+										<div className="flex flex-col">
+											{match.info.participants?.map((players: IPlayer) => (
+												<div key={`${match.info.gameId}-${players.puuid}`}>
+													{players.teamId == player.teamId && (
+														<div className="flex text-white font-bold gap-2 mb-1 items-center">
+															{championUrls[players.championName] ? (
+																<img
+																	className="size-8 rounded-md border"
+																	src={championUrls[players.championName]}
+																	alt={players.championName}
+																/>
+															) : (
+																<div className="size-8 rounded-md border bg-gray-700 flex items-center justify-center">
+																	{loadingImages[`champion_${players.championName}`] ? (
+																		<div className="animate-spin rounded-full h-2 w-2 border-b-2 border-white"></div>
+																	) : (
+																		<span className="text-white text-xs">{players.championName.slice(0, 2)}</span>
+																	)}
+																</div>
+															)}
+															<div className="flex flex-col">
+																<Link to={`/league/${players.riotIdGameName}/${players.riotIdTagline}`}>
+																	<span className={`text-sm ${
+																		players.puuid === puuid 
+																			? 'text-yellow-400' 
+																			: 'text-green-400'
+																	}`}>
+																		{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span>
+																	</span>
+																</Link>
+																<div className="flex gap-3 text-xs text-gray-300">
+																	<span>KDA: {players.kills}/{players.deaths}/{players.assists}</span>
+																	<span>CS: {players.totalMinionsKilled + players.neutralMinionsKilled}</span>
+																	<span>Wards: {players.wardsPlaced}</span>
+																</div>
 															</div>
-														)}
-														<Link to={`/league/${players.riotIdGameName}/${players.riotIdTagline}`}>
-															<span>{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
-														</Link>
-													</div>
-												)}
-											</div>
-										))}
+														</div>
+													)}
+												</div>
+											))}
+										</div>
+										<div className="w-px h-full bg-gradient-to-b from-transparent via-gray-400 to-transparent mx-4"></div>
+										<div className="flex flex-col">
+											{match.info.participants?.map((players: IPlayer) => (
+												<div key={`${match.info.gameId}-enemy-${players.puuid}`}>
+													{players.teamId != player.teamId && (
+														<div className="flex text-white font-bold gap-2 mb-1 items-center">
+															{championUrls[players.championName] ? (
+																<img
+																	className="size-8 rounded-md border"
+																	src={championUrls[players.championName]}
+																	alt={players.championName}
+																/>
+															) : (
+																<div className="size-8 rounded-md border bg-gray-700 flex items-center justify-center">
+																	{loadingImages[`champion_${players.championName}`] ? (
+																		<div className="animate-spin rounded-full h-2 w-2 border-b-2 border-white"></div>
+																	) : (
+																		<span className="text-white text-xs">{players.championName.slice(0, 2)}</span>
+																	)}
+																</div>
+															)}
+															<div className="flex flex-col">
+																<Link to={`/league/${players.riotIdGameName}/${players.riotIdTagline}`}>
+																	<span className="text-sm text-red-400">{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
+																</Link>
+																<div className="flex gap-3 text-xs text-gray-300">
+																	<span>KDA: {players.kills}/{players.deaths}/{players.assists}</span>
+																	<span>CS: {players.totalMinionsKilled + players.neutralMinionsKilled}</span>
+																	<span>Wards: {players.wardsPlaced}</span>
+																</div>
+															</div>
+														</div>
+													)}
+												</div>
+											))}
+										</div>
 									</div>
 								</div>
 							)}
