@@ -176,9 +176,10 @@ export const MatchesCard = ({ puuid }: IProps) => {
 														<div className="flex text-white font-bold gap-2 mb-1 items-center">
 															{championUrls[players.championName] ? (
 																<img
-																	className="size-8 rounded-md border"
+																	className="size-8 rounded-md border object-cover"
 																	src={championUrls[players.championName]}
 																	alt={players.championName}
+																	style={{ objectPosition: 'center' }}
 																/>
 															) : (
 																<div className="size-8 rounded-md border bg-gray-700 flex items-center justify-center">
@@ -218,9 +219,10 @@ export const MatchesCard = ({ puuid }: IProps) => {
 														<div className="flex text-white font-bold gap-2 mb-1 items-center">
 															{championUrls[players.championName] ? (
 																<img
-																	className="size-8 rounded-md border"
+																	className="size-8 rounded-md border object-cover"
 																	src={championUrls[players.championName]}
 																	alt={players.championName}
+																	style={{ objectPosition: 'center' }}
 																/>
 															) : (
 																<div className="size-8 rounded-md border bg-gray-700 flex items-center justify-center">

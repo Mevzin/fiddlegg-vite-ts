@@ -101,9 +101,10 @@ export const WrapperProfile = (props: IProfile) => {
 				<div className="flex justify-between items-center w-80 h-16 border-2 mt-5 rounded-md text-zinc-50 border-green-500 bg-gray-700/50">
 					{profileUrls[summoner.profileIconId] ? (
 						<img
-							className="w-14 rounded-full border-2 border-green-500 ml-2"
+							className="w-14 h-14 rounded-full border-2 border-green-500 ml-2 object-cover"
 							src={profileUrls[summoner.profileIconId]}
 							alt={`Ícone do perfil de ${summoner.gameName}`}
+							style={{ objectPosition: 'center' }}
 						/>
 					) : (
 						<div className="w-14 h-14 rounded-full border-2 border-green-500 ml-2 bg-gray-700 flex items-center justify-center">
