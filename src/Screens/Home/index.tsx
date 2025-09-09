@@ -1,5 +1,7 @@
 import { useState } from "react";
 import WrapperProfile from "../../Components/WrapperProfile/index";
+import SearchHistory from "../../Components/SearchHistory/index";
+import { useSearchHistory } from "../../hooks/useSearchHistory";
 import IMAGES from "../../assets/Images";
 import { FaSearch } from "react-icons/fa";
 
@@ -9,11 +11,12 @@ export const Home = () => {
 	const [summonerTagline, SetSummonerTagLine] = useState("");
 	const [shouldSearch, setShouldSearch] = useState(false);
 	const [searchKey, setSearchKey] = useState(0);
+	const { history, removeFromHistory, clearHistory } = useSearchHistory();
 
-	const handleSearch = () => {
-		if (searchInput.trim()) {
-	
-			const parts = searchInput.trim().split('#');
+	const handleSearch = (inputValue?: string) => {
+		const searchValue = inputValue || searchInput;
+		if (typeof searchValue === 'string' && searchValue.trim()) {
+			const parts = searchValue.trim().split('#');
 			if (parts.length === 2) {
 				const gameName = parts[0].trim();
 				const tagLine = parts[1].trim();
@@ -22,9 +25,18 @@ export const Home = () => {
 					SetSummonerTagLine(tagLine);
 					setShouldSearch(true);
 					setSearchKey(prev => prev + 1);
+					if (!inputValue) {
+						setSearchInput('');
+					}
 				}
 			}
 		}
+	};
+
+	const handleSelectFromHistory = (gameName: string, tagLine: string) => {
+		const searchValue = `${gameName}#${tagLine}`;
+		setSearchInput(searchValue);
+		handleSearch(searchValue);
 	};
 
 	const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -52,7 +64,7 @@ export const Home = () => {
 						/>
 						<button
 							className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-r-md transition-colors h-12"
-							onClick={handleSearch}
+							onClick={() => handleSearch()}
 							title="Buscar jogador"
 						>
 							<FaSearch />
@@ -69,6 +81,13 @@ export const Home = () => {
 						shouldSearch={shouldSearch}
 					/>
 				)}
+
+				<SearchHistory
+					history={history}
+					onRemoveItem={removeFromHistory}
+					onClearHistory={clearHistory}
+					onSelectPlayer={handleSelectFromHistory}
+				/>
 			</div>
 		</div>
 	);

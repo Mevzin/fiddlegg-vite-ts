@@ -5,6 +5,7 @@ import { IProfile } from "../../Models/profile";
 import { FaArrowRight } from "react-icons/fa";
 import { ISummoner } from "../../Models/summoner";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
+import { useSearchHistory } from "../../hooks/useSearchHistory";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 import { Link } from "react-router-dom";
@@ -14,6 +15,7 @@ export const WrapperProfile = (props: IProfile) => {
 	const [summoner, setSummoner] = useState<ISummoner>();
 	const [isLoading, setIsLoading] = useState(false);
 	const { handleError, handleSuccess } = useErrorHandler();
+	const { addToHistory } = useSearchHistory();
 	const [profileUrls, setProfileUrls] = useState<Record<number, string>>({});
 	const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
 
@@ -65,7 +67,9 @@ export const WrapperProfile = (props: IProfile) => {
 
 		try {
 			const response = await apiBase.get(`/league/searchUser/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`);
-			setSummoner(response.data);
+			const summonerData = response.data;
+			setSummoner(summonerData);
+			addToHistory(summonerData);
 			handleSuccess(`Jogador ${name}#${tag} encontrado!`);
 		} catch (error) {
 			handleError(error, `Não foi possível encontrar o jogador ${name}#${tag}`);

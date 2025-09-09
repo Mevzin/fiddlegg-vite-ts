@@ -17,12 +17,7 @@ export const League = () => {
 	const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
 	const [dominantColor, setDominantColor] = useState<string>('#374151');
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [championMastery, setChampionMastery] = useState<{
-		championId: number;
-		championLevel: number;
-		championPoints: number;
-	}[]>([]);
+
 	const [mostPlayedLane, setMostPlayedLane] = useState<string>('');
 	const [topChampion, setTopChampion] = useState<{
 		championId: number;
@@ -110,7 +105,6 @@ export const League = () => {
 		try {
 			const response = await apiBase.get(`/league/championMastery/${puuid}`);
 			const masteryData = response.data.mastery;
-			setChampionMastery(masteryData);
 
 			if (masteryData && masteryData.length > 0) {
 				const topChamp = masteryData[0];

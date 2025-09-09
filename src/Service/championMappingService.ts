@@ -1,8 +1,3 @@
-/**
- * Serviço para mapear championId para championKey
- * Necessário para converter IDs da API de maestria para keys do Data Dragon
- */
-
 import { buildDataDragonUrl } from '../Utils/dataDragonVersionManager';
 
 interface ChampionData {
@@ -21,9 +16,7 @@ export class ChampionMappingService {
   private static isLoaded = false;
   private static loadingPromise: Promise<void> | null = null;
 
-  /**
-   * Carrega os dados de campeões do Data Dragon
-   */
+
   private static async loadChampionData(): Promise<void> {
     if (this.isLoaded) return;
     
@@ -61,11 +54,7 @@ export class ChampionMappingService {
     }
   }
 
-  /**
-   * Converte championId para championKey
-   * @param championId - ID numérico do campeão (ex: "266")
-   * @returns championKey - Nome do campeão usado nas URLs (ex: "Aatrox")
-   */
+
   static async getChampionKeyById(championId: string | number): Promise<string> {
     await this.loadChampionData();
     
@@ -79,18 +68,14 @@ export class ChampionMappingService {
     return championKey;
   }
 
-  /**
-   * Força o recarregamento dos dados de campeões
-   */
+
   static async forceReload(): Promise<void> {
     this.isLoaded = false;
     this.championMap.clear();
     await this.loadChampionData();
   }
 
-  /**
-   * Retorna estatísticas do cache
-   */
+
   static getCacheStats(): { loaded: boolean; championCount: number } {
     return {
       loaded: this.isLoaded,

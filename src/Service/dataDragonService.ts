@@ -1,8 +1,3 @@
-/**
- * Serviço para gerenciar URLs do Data Dragon
- * Centraliza todas as operações relacionadas a imagens e recursos do League of Legends
- */
-
 import { 
   getChampionImageUrl,
   getLatestDataDragonVersion,
@@ -10,17 +5,10 @@ import {
 } from '../Utils/dataDragonVersionManager';
 
 export class DataDragonService {
-  /**
-   * Cache de URLs para evitar múltiplas chamadas
-   */
+
   private static urlCache = new Map<string, string>();
   
-  /**
-   * Obtém URL do ícone de campeão com cache
-   * @param championName - Nome do campeão
-   * @param useCache - Se deve usar cache (padrão: true)
-   * @returns Promise com URL do ícone
-   */
+
   static async getChampionIcon(championName: string, useCache: boolean = true): Promise<string> {
     const cacheKey = `champion_icon_${championName}`;
     
@@ -38,12 +26,7 @@ export class DataDragonService {
     }
   }
   
-  /**
-   * Obtém URL do ícone de item com cache
-   * @param itemId - ID do item
-   * @param useCache - Se deve usar cache (padrão: true)
-   * @returns Promise com URL do ícone
-   */
+
   static async getItemIcon(itemId: string | number, useCache: boolean = true): Promise<string> {
     const itemIdStr = itemId.toString();
     const cacheKey = `item_icon_${itemIdStr}`;
@@ -62,12 +45,7 @@ export class DataDragonService {
     }
   }
   
-  /**
-   * Obtém URL do ícone de perfil com cache
-   * @param profileIconId - ID do ícone de perfil
-   * @param useCache - Se deve usar cache (padrão: true)
-   * @returns Promise com URL do ícone
-   */
+
   static async getProfileIcon(profileIconId: string | number, useCache: boolean = true): Promise<string> {
     const profileIconIdStr = profileIconId.toString();
     const cacheKey = `profile_icon_${profileIconIdStr}`;
@@ -87,13 +65,7 @@ export class DataDragonService {
     }
   }
   
-  /**
-   * Obtém URL da splash art de campeão
-   * @param championName - Nome do campeão
-   * @param skinNum - Número da skin (padrão: 0)
-   * @param useCache - Se deve usar cache (padrão: true)
-   * @returns Promise com URL da splash art
-   */
+
   static async getChampionSplash(championName: string, skinNum: number = 0, useCache: boolean = true): Promise<string> {
     const cacheKey = `champion_splash_${championName}_${skinNum}`;
     
@@ -112,11 +84,7 @@ export class DataDragonService {
     }
   }
   
-  /**
-   * Pré-carrega URLs mais comuns para melhorar performance
-   * @param championNames - Lista de nomes de campeões
-   * @param itemIds - Lista de IDs de itens
-   */
+
   static async preloadCommonAssets(championNames: string[] = [], itemIds: (string | number)[] = []): Promise<void> {
     try {
   
@@ -133,18 +101,13 @@ export class DataDragonService {
     }
   }
   
-  /**
-   * Limpa o cache de URLs
-   */
+
   static clearCache(): void {
     this.urlCache.clear();
 
   }
   
-  /**
-   * Obtém informações do cache
-   * @returns Objeto com estatísticas do cache
-   */
+
   static getCacheStats(): { size: number; keys: string[] } {
     return {
       size: this.urlCache.size,
@@ -152,13 +115,7 @@ export class DataDragonService {
     };
   }
   
-  /**
-   * Força atualização de uma URL específica
-   * @param type - Tipo de asset ('champion', 'item', 'profile')
-   * @param id - ID do asset
-   * @param skinNum - Número da skin (apenas para campeões)
-   * @returns Promise com nova URL
-   */
+
   static async forceRefreshUrl(
     type: 'champion' | 'item' | 'profile' | 'splash', 
     id: string, 
@@ -184,10 +141,7 @@ export class DataDragonService {
     }
   }
   
-  /**
-   * Obtém a versão atual do Data Dragon
-   * @returns Promise com a versão
-   */
+
   static async getCurrentVersion(): Promise<string> {
     return getLatestDataDragonVersion();
   }
