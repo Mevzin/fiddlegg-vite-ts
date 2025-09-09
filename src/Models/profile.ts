@@ -1,4 +1,5 @@
 export interface IProfile {
     namegame: string,
-    tagline: string
+    tagline: string,
+    shouldSearch?: boolean
 }

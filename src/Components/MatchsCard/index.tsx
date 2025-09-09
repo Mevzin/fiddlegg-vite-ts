@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { apiBase } from "../../Service/api";
 import IPlayer from "../../Models/player";
 import { MdOutlineImageNotSupported } from "react-icons/md";
 import { calcAmA, calcCsMinute } from "../../Utils/functions";
 import { Link } from "react-router-dom";
 import { getChampionIconUrl, getItemIconUrl } from "../../Service/dataDragonService";
-
 
 interface IProps {
 	puuid: string | undefined;
@@ -21,13 +20,22 @@ interface IMatch {
 }
 
 export const MatchesCard = ({ puuid }: IProps) => {
-	const [matches, setMatches] = useState<IMatch[]>();
+	const [matches, setMatches] = useState<IMatch[]>([]);
 	const [championUrls, setChampionUrls] = useState<Record<string, string>>({});
 	const [itemUrls, setItemUrls] = useState<Record<string, string>>({});
 	const [loadingImages, setLoadingImages] = useState<Record<string, boolean>>({});
+	const [isLoading, setIsLoading] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
+	const [currentStart, setCurrentStart] = useState(0);
+	const loadingRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		getMatches(puuid);
+		if (puuid) {
+			setMatches([]);
+			setCurrentStart(0);
+			setHasMore(true);
+			getMatches(puuid, 0, true);
+		}
 	}, [puuid]);
 
 	const loadChampionUrl = async (championName: string) => {
@@ -37,7 +45,7 @@ export const MatchesCard = ({ puuid }: IProps) => {
 				const url = await getChampionIconUrl(championName);
 				setChampionUrls(prev => ({ ...prev, [championName]: url }));
 			} catch (error) {
-				console.error(`Erro ao carregar ícone do campeão ${championName}:`, error);
+				console.error('Erro ao carregar icone do campeao:', error);
 			} finally {
 				setLoadingImages(prev => ({ ...prev, [`champion_${championName}`]: false }));
 			}
@@ -51,7 +59,7 @@ export const MatchesCard = ({ puuid }: IProps) => {
 				const url = await getItemIconUrl(itemId);
 				setItemUrls(prev => ({ ...prev, [itemId]: url }));
 			} catch (error) {
-				console.error(`Erro ao carregar ícone do item ${itemId}:`, error);
+				console.error('Erro ao carregar icone do item:', error);
 			} finally {
 				setLoadingImages(prev => ({ ...prev, [`item_${itemId}`]: false }));
 			}
@@ -62,31 +70,77 @@ export const MatchesCard = ({ puuid }: IProps) => {
 		if (matches) {
 			matches.forEach(match => {
 				match.info.participants?.forEach(player => {
-					loadChampionUrl((player as IPlayer).championName);
-					[(player as IPlayer).item0,
-					(player as IPlayer).item1,
-					(player as IPlayer).item2,
-					(player as IPlayer).item3,
-					(player as IPlayer).item4,
-					(player as IPlayer).item5,
-					(player as IPlayer).item6]
-						.forEach(item => {
-							if (item !== 0) loadItemUrl(item);
-						});
+					const typedPlayer = player as IPlayer;
+					loadChampionUrl(typedPlayer.championName);
+					
+					const items = [
+						typedPlayer.item0,
+						typedPlayer.item1,
+						typedPlayer.item2,
+						typedPlayer.item3,
+						typedPlayer.item4,
+						typedPlayer.item5,
+						typedPlayer.item6
+					];
+					
+					items.forEach(item => {
+						if (item !== 0) loadItemUrl(item);
+					});
 				});
 			});
 		}
 	}, [matches]);
 
-	async function getMatches(puuid: string | undefined) {
-		if (puuid == undefined) return;
+	const getMatches = useCallback(async (puuid: string, start: number = 0, reset: boolean = false) => {
+		if (!puuid) return;
 
-		await apiBase
-			.get(`/league/searchMatchs/${puuid}`)
-			.then((res) => setMatches(res.data.matchlist));
-	}
+		setIsLoading(true);
+		try {
+			const response = await apiBase.get(`/league/searchMatchs/${puuid}?start=${start}&count=10`);
+			const { matchlist, pagination } = response.data;
+
+			if (reset) {
+				setMatches(matchlist);
+			} else {
+				setMatches(prev => [...prev, ...matchlist]);
+			}
+
+			setHasMore(pagination.hasMore);
+			setCurrentStart(start + matchlist.length);
+		} catch (error) {
+			console.error('Erro ao carregar partidas:', error);
+			setHasMore(false);
+		} finally {
+			setIsLoading(false);
+		}
+	}, []);
+
+	const loadMore = useCallback(() => {
+		if (puuid && !isLoading && hasMore) {
+			getMatches(puuid, currentStart);
+		}
+	}, [puuid, currentStart, isLoading, hasMore, getMatches]);
+
+
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting && hasMore && !isLoading) {
+					loadMore();
+				}
+			},
+			{ threshold: 0.1 }
+		);
+
+		if (loadingRef.current) {
+			observer.observe(loadingRef.current);
+		}
+
+		return () => observer.disconnect();
+	}, [hasMore, isLoading, loadMore]);
+
 	return (
-		<div className="flex flex-col mt-8 ">
+		<div className="flex flex-col mt-8">
 			{matches?.map((match, matchIndex) => (
 				<div key={`match-${match.info.gameId}-${matchIndex}`}>
 					{match.info.participants?.map((player: IPlayer, playerIndex) => (
@@ -101,23 +155,28 @@ export const MatchesCard = ({ puuid }: IProps) => {
 										<span className="text-white font-bold">{player.championName.toUpperCase()}</span>
 										{championUrls[player.championName] ? (
 											<img
-												className="size-24 rounded-full border-2 mt-1"
+												className="size-20 rounded-md border object-cover"
 												src={championUrls[player.championName]}
 												alt={player.championName}
+												style={{ objectPosition: 'center' }}
 											/>
 										) : (
-											<div className="size-24 rounded-full border-2 mt-1 bg-gray-700 flex items-center justify-center">
+											<div className="size-20 rounded-md border bg-gray-700 flex items-center justify-center">
 												{loadingImages[`champion_${player.championName}`] ? (
 													<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
 												) : (
-													<span className="text-white text-xs text-center">{player.championName}</span>
+													<span className="text-white text-sm">{player.championName.slice(0, 3)}</span>
 												)}
 											</div>
 										)}
 									</div>
 									<div className="flex flex-col">
 										<div className="flex justify-center mb-2 text-center">
-											<span className="font-bold text-white"><span className={player.win ? 'text-green-500' : 'text-red-500'}>{player.win ? 'Vitoria' : 'Derrota'}</span> * {player.lane} * {match.info.gameMode}</span>
+											<span className="font-bold text-white">
+												<span className={player.win ? 'text-green-500' : 'text-red-500'}>
+													{player.win ? 'Vitoria' : 'Derrota'}
+												</span> * {player.lane} * {match.info.gameMode}
+											</span>
 										</div>
 										<div className="flex w-80 justify-between mx-4">
 											{[player.item0, player.item1, player.item2, player.item3, player.item4, player.item5, player.item6].map((item, index) => {
@@ -191,7 +250,7 @@ export const MatchesCard = ({ puuid }: IProps) => {
 																</div>
 															)}
 															<div className="flex flex-col">
-																<Link to={`/league/${players.riotIdGameName}/${players.riotIdTagline}`}>
+																<Link to={`/league/${encodeURIComponent(players.riotIdGameName)}/${encodeURIComponent(players.riotIdTagline)}`}>
 																	<span className={`text-sm ${
 																		players.puuid === puuid 
 																			? 'text-yellow-400' 
@@ -234,9 +293,9 @@ export const MatchesCard = ({ puuid }: IProps) => {
 																</div>
 															)}
 															<div className="flex flex-col">
-																<Link to={`/league/${players.riotIdGameName}/${players.riotIdTagline}`}>
-																	<span className="text-sm text-red-400">{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
-																</Link>
+																<Link to={`/league/${encodeURIComponent(players.riotIdGameName)}/${encodeURIComponent(players.riotIdTagline)}`}>
+																			<span className="text-sm text-red-400">{players.riotIdGameName} <span className="text-gray-400">#{players.riotIdTagline}</span></span>
+																		</Link>
 																<div className="flex gap-3 text-xs text-gray-300">
 																	<span>KDA: {players.kills}/{players.deaths}/{players.assists}</span>
 																	<span>CS: {players.totalMinionsKilled + players.neutralMinionsKilled}</span>
@@ -255,6 +314,19 @@ export const MatchesCard = ({ puuid }: IProps) => {
 					))}
 				</div>
 			))}
+			
+			
+			<div ref={loadingRef} className="flex justify-center py-4">
+				{isLoading && (
+					<div className="flex items-center gap-2 text-white">
+						<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+						<span>Carregando mais partidas...</span>
+					</div>
+				)}
+				{!hasMore && matches.length > 0 && (
+					<span className="text-gray-400">Nao ha mais partidas para carregar</span>
+				)}
+			</div>
 		</div>
 	);
 };

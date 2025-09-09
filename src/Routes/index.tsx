@@ -7,7 +7,7 @@ export default function RoutesFiddle() {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/league/:gameName/:tagLine" element={<League />} />
+				<Route path="/league/:name/:tag" element={<League />} />
 			</Routes>
 		</BrowserRouter>
 	);

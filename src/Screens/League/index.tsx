@@ -12,10 +12,11 @@ import "./styles.css";
 
 export const League = () => {
 	const [summoner, setSummoner] = useState<ISummoner>();
-	const { gameName, tagLine } = useParams();
+	const { name, tag } = useParams();
 	const [profileUrls, setProfileUrls] = useState<Record<string, string>>({});
 	const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
 	const [dominantColor, setDominantColor] = useState<string>('#374151');
+
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [championMastery, setChampionMastery] = useState<{
 		championId: number;
@@ -31,8 +32,8 @@ export const League = () => {
 	const [championIconUrl, setChampionIconUrl] = useState<string>('');
 
 	useEffect(() => {
-		searchSummoner(gameName, tagLine);
-	}, [gameName, tagLine]);
+		searchSummoner(name, tag);
+	}, [name, tag]);
 
 	useEffect(() => {
 		if (summoner?.puuid) {
@@ -194,7 +195,7 @@ export const League = () => {
 		if (!name || !tag) return;
 
 		await apiBase
-			.get(`/league/searchUser/${name}/${tag}`)
+			.get(`/league/searchUser/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`)
 			.then((res) => {
 				setSummoner(res.data);
 			})

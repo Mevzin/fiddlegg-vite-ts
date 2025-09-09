@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { apiBase } from "../../Service/api";
 import { IProfile } from "../../Models/profile";
@@ -16,25 +16,12 @@ export const WrapperProfile = (props: IProfile) => {
 	const { handleError, handleSuccess } = useErrorHandler();
 	const [profileUrls, setProfileUrls] = useState<Record<number, string>>({});
 	const [loadingProfile, setLoadingProfile] = useState<boolean>(false);
-	const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	useEffect(() => {
-		if (debounceRef.current) {
-			clearTimeout(debounceRef.current);
-		}
-
-
-		debounceRef.current = setTimeout(() => {
+		if (props.shouldSearch && props.namegame && props.tagline) {
 			searchSummoner(props.namegame, props.tagline);
-		}, 3000);
-
-
-		return () => {
-			if (debounceRef.current) {
-				clearTimeout(debounceRef.current);
-			}
-		};
-	}, [props.namegame, props.tagline]);
+		}
+	}, [props.shouldSearch, props.namegame, props.tagline]);
 
 	const loadProfileUrl = async (iconId: number) => {
 		if (!profileUrls[iconId] && !loadingProfile) {
@@ -77,7 +64,7 @@ export const WrapperProfile = (props: IProfile) => {
 		setSummoner(undefined);
 
 		try {
-			const response = await apiBase.get(`/league/searchUser/${name}/${tag}`);
+			const response = await apiBase.get(`/league/searchUser/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`);
 			setSummoner(response.data);
 			handleSuccess(`Jogador ${name}#${tag} encontrado!`);
 		} catch (error) {
@@ -122,7 +109,7 @@ export const WrapperProfile = (props: IProfile) => {
 						<h1 className="text-sm text-gray-300">Level: {summoner.summonerLevel}</h1>
 					</div>
 					<Link
-						to={`/league/${summoner.gameName}/${summoner.tagLine}`}
+					to={`/league/${encodeURIComponent(summoner.gameName)}/${encodeURIComponent(summoner.tagLine)}`}
 						className="flex h-full w-11 bg-green-500 items-center justify-center hoverShowPage hover:bg-green-600 transition-colors"
 						title="Ver perfil completo"
 					>

@@ -45,7 +45,7 @@ interface IRankData {
 
 export const RankImageWithData = (rankData: IRankData) => {
 	const { tier, rank, queueType, leaguePoints } = rankData;
-	
+
 	switch (tier) {
 		case "BRONZE":
 			return <EloSummoner src={bronze} tier={tier} rank={rank} queueType={queueType} leaguePoints={leaguePoints} />;
@@ -88,7 +88,7 @@ export const calcAmA = (kills: number, assits: number, deaths: number) => {
 
 export const calcMatchTime = (time: number) => {
 	const d = new Date(1000 * Math.round(time / 1000));
-	function pad(i: any) {
+	function pad(i: number): string {
 		return ('0' + i).slice(-2);
 	}
 	const str = pad(d.getUTCMinutes()) + 'min ' + pad(d.getUTCSeconds()) + "sec";
@@ -97,11 +97,11 @@ export const calcMatchTime = (time: number) => {
 
 export const calcCsMinute = (time: number, cs: number) => {
 	const d = new Date(1000 * Math.round(time / 1000));
-	function pad(i: any) {
+	function pad(i: number) {
 		return ('0' + i).slice(-2);
 	}
-	const min: any = pad(d.getUTCSeconds())
+	const min: string = pad(d.getUTCSeconds())
 
-	const mediaCs = cs / min
+	const mediaCs = cs / parseInt(min)
 	return mediaCs.toFixed(2);
 }
